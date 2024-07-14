@@ -1,3 +1,11 @@
+//poi aggiungo parametro style , oppure in css
+//per inserire codice java script nell'hml uso le graffe primo livello
+// il secondo livello di graffe indica un oggetto
+
+// 1. con reat si possono creare componenti che si possono richiamare nel progetto senza risctriverli
+// 2.  stili dinamici
+//3.  classi a livello dinamico
+import "./Navbar.css";
 import Link from "./Link";
 import "./Navbar.css";
 
@@ -8,13 +16,8 @@ function Navbar() {
   const imgStyle = {
     height: y < 10 ? "200px" : "500px",
     borderRaius: "100%",
-  }; //poi aggiungo parametro style , oppure in css
-  //per inserire codice java script nell'hml uso le graffe primo livello
-  // il secondo livello di graffe indica un oggetto
+  };
 
-  // 1. con reat si possono creare componenti che si possono richiamare nel progetto senza risctriverli
-  // 2.  stili dinamici
-  //3.  classi a livello dinamico
   return (
     <>
       <nav>{x.toFixed(2)}</nav>
