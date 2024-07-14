@@ -1,0 +1,16 @@
+.formattazione {
+  text-align: left;
+  white-space: pre-wrap; /* Preserva spazi, tabulazioni, a capo e consente il wrapping */
+  /* Allinea il testo a destra */
+  font-style: italic; /* Rende il testo corsivo */
+  font-family: monospace; /* Facoltativo: rende il testo più leggibile per il codice */
+  /* padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px; */
+}
+/* 
+ .contenitoreFoto {
+  width: 100px; 
+  height: 100px; 
+}  */
