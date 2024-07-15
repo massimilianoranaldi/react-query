@@ -6,81 +6,139 @@
 - istallazione TailWind è un frame-work
     npm install -D tailwindcss postcss autoprefixer
     npx tailwindcss init -p
+- per richiamare api http è necessario istallare lato client il pacchetto
+    npm install axios
+  lato server è stato istallato cors per consentire di accettare le chiamate dall'app react e nel package.json è stato configurato il parametro
+    "proxy": "http://localhost:5000",
 */
 
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import axios from "axios";
 
+// sezione assets
 import citta from "./assets/cities";
 
 // sezione componenti
-
 import "./components/Card"; //importo libreria
 import Card from "./components/Card"; //creo oggetto
-
-//nel caso viene dichiara fuori
-function handleConteggio2(conteggio, setConteggio) {
-  setConteggio((conteggio) => conteggio + 1);
-}
+import "./components/CardForm";
+import CardForm from "./components/CardForm";
 
 function App() {
   const [count, setCount] = useState(0); //uestate è composto da due oggetti : una variabile e lafunzione che la modifica: lo stato precedente viene person e sovrascritto con quello attuale
-  const cities = [...citta];
-  //let conteggio = 0;
+  //const cities = [...citta];
+  const [cities, setCities] = useState([...citta]); //inizializzo lo stato con l'array iniziale (3 citta)
 
-  const [conteggio, setConteggio] = useState(0); //uestate è composto da due oggetti : una variabile e lafunzione che la modifica: lo stato
-  //dichiarata dentro la funzione principale
-  function handleConteggio() {
-    setConteggio((conteggio) => conteggio + 1);
-  }
-
-  //esempio di stati ad array
-  const [item, setItems] = useState([1, 2, 3]);
-  function aggiornaItem() {
-    const nuovoItem = 4;
-    console.log("ITEM : ", item);
-    setItems([...item, nuovoItem]);
-  }
-
-  //oppure un oggetto
-  const [user, setUser] = useState({ name: "Alice", age: "21" });
-  const updateUser = () => {
-    const newUser = { name: "pippo", age: "33" };
-    console.log("USER : ", user);
-    setUser(newUser);
+  const aggiungiCitta = (city) => {
+    //    setCities([...cities, city]);
+    setCities([...cities, city]);
   };
-  //   const cities = [
-  //     {
-  //       id: 1,
-  //       nome: "TOKYO",
-  //       urlImmagine:
-  //         "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHRva3lvfGVufDB8fDB8fHww",
-  //       descrizione: `
-  // ciao signori,
-  // io sono tokio.
-  // coi chi siete ?...
-  // `,
-  //       visitato: true,
-  //     },
-  //     {
-  //       id: 2,
-  //       nome: "ROMA",
-  //       urlImmagine:
-  //         "https://images.unsplash.com/photo-1604580864964-0462f5d5b1a8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cm9tYXxlbnwwfHwwfHx8MA%3D%3D",
-  //       descrizione: `
-  // ciao signori,
-  // io sono roma.
-  // coi chi siete ?...
-  // `,
-  //       visitato: false,
-  //     },
-  //   ];
+
+  //ESEMPIO CHIAMATA API GET NODE _ JS
+  // const [responseData, setResponseData] = useState(null);
+  // const fetchDataFromApi = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:5000/api/persone/");
+  //     setResponseData(response.data);
+  //   } catch (error) {
+  //     console.error("Errore durante la richiesta API:", error);
+  //     setError("Errore durante il recupero dei dati");
+  //   }
+  // };
+
+  //ESEMPIO CHIAMATA API GET NODE _ JS NEW
+  const [error, setError] = useState(null);
+  const [data, setData] = useState([]);
+
+  const getArrayCities = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/persone/getReact/"
+      );
+      console.log(response.data);
+      setData(response.data);
+    } catch (error) {
+      console.error("Errore durante la richiesta API:", error);
+      setError("Errore durante il recupero dei dati");
+    }
+  };
+
+  //ESEMPIO CHIAMATA API POST NODE _ JS
+  const handlePostButton = async () => {
+    //   const cittaPost = {
+    //     id: 5,
+    //     nome: "SIDNEY",
+    //     urlImmagine:
+    //       "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    //     descrizione: `
+    // ciao signori,
+    // io sono sidney.
+    // coi chi siete ?...
+    // `,
+    //     visitato: true,
+    //   };
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/persone/putReact",
+        cities
+      );
+      console.log("Risposta dal server:", response.data);
+      // Puoi gestire la risposta come necessario
+    } catch (error) {
+      console.error("Errore durante la richiesta API:", error);
+      // Gestisci l'errore come necessario
+    }
+  };
 
   return (
     <>
-      <div className="grid grid-cols-4 gap-10">
+      <div>
+        <div>
+          <h1>Elenco Città getArrayCities</h1>
+          <button onClick={getArrayCities}>Carica Dati</button>
+          <ul>
+            {data.map((item) => (
+              <li key={item.id}>
+                <h2>{item.nome}</h2>
+                <img
+                  src={item.urlImmagine}
+                  alt={item.nome}
+                  style={{ width: "200px", height: "auto" }}
+                />
+                <p>{item.descrizione}</p>
+                <p>Visitato: {item.visitato ? "Sì" : "No"}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h1>Invia Messaggio</h1>
+          <button onClick={handlePostButton}>
+            Invia Messaggio con handlePostButton
+          </button>
+        </div>
+
+        {/* <h1>Recuperp DATI</h1>
+        <button onClick={fetchDataFromApi}>
+          Recupero dati con fetchDataFromApi
+        </button> */}
+        {/* 
+        {error && <p>Errore: {error}</p>}
+
+        {responseData && (
+          <div>
+            <h2>Dati ricevuti dall'API:</h2>
+            <pre>{JSON.stringify(responseData, null, 2)}</pre>
+          </div>
+        )} */}
+      </div>
+      {/*passo al componente , come propos direttamente la funzione che aggiunge la città cosi la puo richiamare */}
+      <CardForm aggiungiCitta={aggiungiCitta}></CardForm>
+      <div className="grid grid-cols-4 gap-10 bg-zinc-700">
         {cities
           //.filter((city) => city.visitato)
           .map((city) => (
@@ -90,45 +148,18 @@ function App() {
               urlImmagine={city.urlImmagine}
               descrizione={city.descrizione}
               visitato={city.visitato}
-            ></Card>
+            >
+              provo
+            </Card>
           ))}
-        {/* 
-        <Card
-          titolo={cities[0].nome}
-          urlImmagine={cities[0].urlImmagine}
-          descrizione={cities[0].descrizione}
-          visitato={cities[0].visitato}
-        ></Card>
-        <Card
-          titolo={cities[1].nome}
-          urlImmagine={cities[1].urlImmagine}
-          descrizione={cities[1].descrizione}
-          visitato={cities[1].visitato}
-        ></Card> */}
       </div>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        {
-          // conteggio viene incrementato, ma poichè non è una variabile di stato, nella pagina non si vede il refresh e quindi react non la aggiorna. quindi devo far diventare conteggio una variabile di stato
-        }
-        {/* <button onClick={() => console.log(conteggio++)}>
-          conteggio is {conteggio}
-        </button> */}
-        <button onClick={handleConteggio}>conteggio is {conteggio}</button>
-        <button
-          onClick={function () {
-            handleConteggio2(conteggio, setConteggio);
-          }}
-        >
-          conteggio is {conteggio}
-        </button>
-
-        <button onClick={updateUser}>user is {user.name}</button>
-
-        <button onClick={aggiornaItem}>user is {item}</button>
-      </div>
+      {
+        <div className="card">
+          <button onClick={() => setCount((count) => count + 1)}>
+            count is {count}
+          </button>
+        </div>
+      }
     </>
   );
 }
