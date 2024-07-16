@@ -12,7 +12,7 @@
     "proxy": "http://localhost:5000",
 */
 
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
@@ -35,17 +35,11 @@ function App() {
   const [cities, setCities] = useState([...citta]); //inizializzo lo stato con l'array iniziale (3 citta)
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-  // const [formState, dispatchFormState] = useReducer(formReducer, {
-  //   name: "",
-  //   email: "",
-  // }); //la funzione dispacthFormState richiama la funzione formReducer per aggiornare lo stato
 
   //FUNZIONE PER [AGGIUNGERE] UNA CITTA ALL'ARRAY
   //--------------------------------------------------------------------------------
   const aggiungiCitta = (city) => {
     setCities([...cities, city]);
-    console.log("-------------------------------------", city);
-    handlePostButton2(city); //aggiorno il mio repository aggiungendo la sola citta
   };
 
   //FUNZIONE PER [GET-RECUPERARE] IL CONTENUTO DEL FILE-ARRAY DELLE CITTA DA NODE-JS
@@ -56,30 +50,23 @@ function App() {
         "http://localhost:5000/api/persone/getReact/"
       );
       console.log("DATI DAL SERVER:", response.data);
-      setData(response.data);
-      //setCities(response.data);
+      //setData(response.data);
+      setCities(response.data);
     } catch (error) {
       console.error("Errore durante la richiesta API:", error);
       setError("Errore durante il recupero dei dati");
     }
   };
 
-  //FUNZIONE PER [POST-INVIARE] ARRAY DELLE AL FILE-ARRAY SU NODE-JS
+  //FUNZIONE PER [POST-INVIARE] LE CITTA AL FILE-ARRAY SU NODE-JS
   //--------------------------------------------------------------------------------
   const handlePostButton = async () => {
-    //TUTTO ARRAY
     try {
-      console.log("....... >>>> PUSH DATI VERSO SERVER:", cities);
       const response = await axios.post(
         "http://localhost:5000/api/persone/putReact",
         cities
       );
-
-      console.log(
-        "<<<< ..... RISPOSTA DAL SERVER:",
-        response.data.datiCitta[0]
-      );
-
+      console.log("Risposta dal server:", response.data);
       // Puoi gestire la risposta come necessario
     } catch (error) {
       console.error("Errore durante la richiesta API:", error);
@@ -87,37 +74,12 @@ function App() {
     }
   };
 
-  //FUNZIONE PER [POST-INVIARE] UNA CITTA AL FILE-ARRAY SU NODE-JS
+  //FUNZIONE CHE VA AD AGGIORNARE IL FILE JSON DELLE CITTA [useEffect]
   //--------------------------------------------------------------------------------
-  const handlePostButton2 = async (city) => {
-    //SOLO CITTA
-    try {
-      console.log("....... >>>> PUSH DATI VERSO SERVER2:", city);
-      const response = await axios.post(
-        "http://localhost:5000/api/persone/putReact2",
-        city
-      );
-
-      console.log("<<<< ..... RISPOSTA DAL SERVER2:", response.data);
-
-      // Puoi gestire la risposta come necessario
-    } catch (error) {
-      console.error("Errore durante la richiesta API:", error);
-      // Gestisci l'errore come necessario
-    }
-  };
-  //FUNZIONE GESTIONE FORM
-  // const handleFieldChange = (field, value) => {
-  //   //quando cambio il valore nel campo volgio che si aggiorna la pagina
-  //   dispatchFormState();
-  // };
-
-  //FUNZIONE CHE VA AD AGGIORNARE IL FILE JSON DELLE CITTA CON TUTTE LE CITTA[useEffect]
-  //--------------------------------------------------------------------------------
-  // useEffect(() => {
-  //   console.log("SONO IN USE EFFECT PER AGGIORNARE FILE ARRAY cities"); //viene eseguita solo dopo il render della pagina
-  //   handlePostButton(); //aggiorno il mio repository
-  // }, [cities]);
+  useEffect(() => {
+    console.log("SONO IN USE EFFECT PER AGGIORNARE FILE ARRAY cities"); //viene eseguita solo dopo il render della pagina
+    handlePostButton(); //aggiorno il mio repository
+  }, [cities]);
 
   return (
     <>
@@ -179,31 +141,6 @@ function App() {
             </Card>
           ))}
       </div>
-      {/* {<form>
-        <div className="flex flex-col">
-          <label htmlFor="name">Nome:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formState.name}
-            onChange={(e) => handleFieldChange("name", e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formState.email}
-            onChange={(e) => handleFieldChange("email", e.target.value)}
-          />
-        </div>
-        <button onClick={resetForm}>Reset</button>
-        <button>Invia</button>
-      </form>} */}
-
       {
         <div className="card">
           <button onClick={() => setCount((count) => count + 1)}>
