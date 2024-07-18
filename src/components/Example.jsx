@@ -7,6 +7,7 @@ function Example({ cities }) {
     <div>
       <p>conteggio:{count}</p>
       <button onClick={() => setCount(count + 1)}>Incrementa</button>
+      <button onClick={() => setCount(count - 1)}>Decrementa</button>
     </div>
   );
 }
