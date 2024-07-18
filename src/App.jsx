@@ -35,10 +35,28 @@ function App() {
   const [cities, setCities] = useState([...citta]); //inizializzo lo stato con l'array iniziale (3 citta)
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-  // const [formState, dispatchFormState] = useReducer(formReducer, {
-  //   name: "",
-  //   email: "",
-  // }); //la funzione dispacthFormState richiama la funzione formReducer per aggiornare lo stato
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    //la funzione serve a modificare lo stato
+    name: "",
+    email: "",
+  }); //la funzione dispacthFormState richiama la funzione formReducer per aggiornare lo stato
+
+  //UTILIZZO DEL REDUCER
+  function formReducer(state, action) {
+    //lo state ha questa struttura {
+    //la funzione serve a modificare lo stato
+    //   name: "",
+    //   email: "",
+    // } mentre la action è o "RESET_FORM" o "CHANGE_FIELD" e i parametri aggiuntivi nome e valore da cambiare
+    switch (action.type) {
+      case "CHANGE_FIELD":
+        return { ...state, [action.field]: action.value };
+      case "RESET_FORM":
+        return { name: "", email: "" };
+      default:
+        return state;
+    }
+  }
 
   //FUNZIONE PER [AGGIUNGERE] UNA CITTA ALL'ARRAY
   //--------------------------------------------------------------------------------
@@ -106,11 +124,32 @@ function App() {
       // Gestisci l'errore come necessario
     }
   };
-  //FUNZIONE GESTIONE FORM
-  // const handleFieldChange = (field, value) => {
-  //   //quando cambio il valore nel campo volgio che si aggiorna la pagina
-  //   dispatchFormState();
-  // };
+  //UTILIZZO DEL REDUCER : FUNZIONE CHANGE FORM
+  //--------------------------------------------------------------------------------
+  //riceve nome e valore : "name",valore
+  const handleFieldChange = (field, value) => {
+    //quando cambio il valore nel campo voglio che si aggiorna la pagina
+    console.log(formState);
+    dispatchFormState({ type: "CHANGE_FIELD", field, value }); //chiamo la funzione che fa la modifica di un campo con un certo valore. etichetto questa modifica con CHANGE_FIELD
+  };
+
+  //UTILIZZO DEL REDUCER: FUNZIONE RESET  FORM
+  //--------------------------------------------------------------------------------
+  //riceve nome e valore : "name",valore
+  const resetForm = (e) => {
+    e.preventDefault();
+
+    //quando cambio il valore nel campo voglio che si aggiorna la pagina
+    dispatchFormState({ type: "RESET_FORM" }); //chiamo la funzione che fa la modifica di un campo con un certo valore. etichetto questa modifica con CHANGE_FIELD
+    console.log(formState);
+  };
+
+  //FUNZIONE SEND  FORM
+  //--------------------------------------------------------------------------------
+  const sendForm = (e) => {
+    e.preventDefault();
+    console.log("FORMSTATE:...", formState);
+  };
 
   //FUNZIONE CHE VA AD AGGIORNARE IL FILE JSON DELLE CITTA CON TUTTE LE CITTA[useEffect]
   //--------------------------------------------------------------------------------
@@ -179,30 +218,32 @@ function App() {
             </Card>
           ))}
       </div>
-      {/* {<form>
-        <div className="flex flex-col">
-          <label htmlFor="name">Nome:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formState.name}
-            onChange={(e) => handleFieldChange("name", e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formState.email}
-            onChange={(e) => handleFieldChange("email", e.target.value)}
-          />
-        </div>
-        <button onClick={resetForm}>Reset</button>
-        <button>Invia</button>
-      </form>} */}
+      {
+        <form>
+          <div>
+            <label htmlFor="name">Nome:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formState.name}
+              onChange={(e) => handleFieldChange("name", e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formState.email}
+              onChange={(e) => handleFieldChange("email", e.target.value)}
+            />
+          </div>
+          <button onClick={resetForm}>Reset</button>
+          <button onClick={sendForm}>Invia</button>
+        </form>
+      }
 
       {
         <div className="card">
