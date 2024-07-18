@@ -28,8 +28,7 @@ import "./components/CardForm";
 import CardForm from "./components/CardForm";
 
 //context
-import Example from "./components/Example";
-import { ProvaContext2 } from "./stores/ProvaContext2";
+import { ProvaContext } from "./stores/ProvaContext.jsx";
 
 function App() {
   // VARIABILI DI STATO
@@ -167,59 +166,98 @@ function App() {
 
   return (
     <>
-      <ProvaContext2.Provider value={{ count, setCount }}>
-        <Example cites={cities}></Example>
-        <CardForm aggiungiCitta={aggiungiCitta}></CardForm>
-        <div className="grid grid-cols-4 gap-10 bg-zinc-700">
-          {cities
-            //.filter((city) => city.visitato)
-            .map((city) => (
-              <Card
-                key={city.id}
-                titolo={city.nome}
-                urlImmagine={city.urlImmagine}
-                descrizione={city.descrizione}
-                visitato={city.visitato}
-              >
-                provo
-              </Card>
+      <div>
+        <div>
+          <h1>Elenco Città getArrayCities</h1>
+          <button onClick={getArrayCities}>Carica Dati</button>
+          <ul>
+            {data.map((item) => (
+              <li key={item.id}>
+                <h2>{item.nome}</h2>
+                <img
+                  src={item.urlImmagine}
+                  alt={item.nome}
+                  style={{ width: "200px", height: "auto" }}
+                />
+                <p>{item.descrizione}</p>
+                <p>Visitato: {item.visitato ? "Sì" : "No"}</p>
+              </li>
             ))}
+          </ul>
         </div>
-        {
-          <form>
-            <div>
-              <label htmlFor="name">Nome:</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formState.name}
-                onChange={(e) => handleFieldChange("name", e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formState.email}
-                onChange={(e) => handleFieldChange("email", e.target.value)}
-              />
-            </div>
-            <button onClick={resetForm}>Reset</button>
-            <button onClick={sendForm}>Invia</button>
-          </form>
-        }
 
-        {
-          <div className="card">
-            <button onClick={() => setCount((count) => count + 1)}>
-              count is {count}
-            </button>
+        <div>
+          <h1>Invia Messaggio</h1>
+          <button onClick={handlePostButton}>
+            Invia Messaggio con handlePostButton
+          </button>
+        </div>
+
+        {/* <h1>Recuperp DATI</h1>
+        <button onClick={fetchDataFromApi}>
+          Recupero dati con fetchDataFromApi
+        </button> */}
+        {/* 
+        {error && <p>Errore: {error}</p>}
+
+        {responseData && (
+          <div>
+            <h2>Dati ricevuti dall'API:</h2>
+            <pre>{JSON.stringify(responseData, null, 2)}</pre>
           </div>
-        }
-      </ProvaContext2.Provider>
+        )} */}
+      </div>
+      {/*passo al componente , come propos direttamente la funzione che aggiunge la città cosi la puo richiamare */}
+      <CardForm aggiungiCitta={aggiungiCitta}></CardForm>
+      <div className="grid grid-cols-4 gap-10 bg-zinc-700">
+        {cities
+          //.filter((city) => city.visitato)
+          .map((city) => (
+            <Card
+              key={city.id}
+              titolo={city.nome}
+              urlImmagine={city.urlImmagine}
+              descrizione={city.descrizione}
+              visitato={city.visitato}
+            >
+              provo
+            </Card>
+          ))}
+      </div>
+      {
+        <form>
+          <div>
+            <label htmlFor="name">Nome:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formState.name}
+              onChange={(e) => handleFieldChange("name", e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formState.email}
+              onChange={(e) => handleFieldChange("email", e.target.value)}
+            />
+          </div>
+          <button onClick={resetForm}>Reset</button>
+          <button onClick={sendForm}>Invia</button>
+        </form>
+      }
+
+      {
+        <div className="card">
+          <button onClick={() => setCount((count) => count + 1)}>
+            count is {count}
+          </button>
+        </div>
+      }
     </>
   );
 }
