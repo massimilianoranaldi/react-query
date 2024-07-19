@@ -1,13 +1,25 @@
-import { useContext, useState, useEffect } from "react";
-import { ProvaContext2 } from "../stores/ProvaContext2";
+import { increment, decrement } from "../redux/counterSlice";
+import { useSelector, useDispatch } from "react-redux";
 
-function Example({ cities }) {
-  const { count, setCount } = useContext(ProvaContext2); //posso recuperare lo stato da ogni componente basta importare il contesto
+function Example() {
+  const count = useSelector((state) => state.counter.value); //per prendere un vaòlore dallo stato
+  const dispatch = useDispatch(); //per mandare dei comandi di modifica sullo stato
   return (
     <div>
-      <p>conteggio:{count}</p>
-      <button onClick={() => setCount(count + 1)}>Incrementa</button>
-      <button onClick={() => setCount(count - 1)}>Decrementa</button>
+      <p className="mb-3">conteggio:{count}</p>
+      <button
+        className="mr-3"
+        aria-label="Increment value"
+        onClick={() => dispatch(increment())}
+      >
+        Incrementa
+      </button>
+      <button
+        aria-label="Decrement value"
+        onClick={() => dispatch(decrement())}
+      >
+        Decrementa
+      </button>
     </div>
   );
 }

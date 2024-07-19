@@ -5,14 +5,8 @@ flex-col : organizza i figli disponendoli in colonna "flex-row" in fila
 
 */
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { add } from "../redux/citiesSlice";
 
-//devo solo modificare lo stato
-function CardForm() {
-  const dispatch = useDispatch();
-
-  //lo stato del form non ha senso che venga gestito nel redux ma lo lasciamo nel component
+function CardForm({ aggiungiCitta }) {
   const [formData, setFormData] = useState({
     nome: "",
     descrizione: "",
@@ -25,10 +19,9 @@ function CardForm() {
     const inputValue = type == "checkbox" ? checked : value;
     setFormData({ ...formData, [name]: inputValue }); //sovrascriviamo solo la proprieta che ha come nome: inputValue aggiorna real time l'interfaccia. [name] ci deve essere il nome dell'attrinuto del formadata
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    console.log("debug");
     const city = {
       id: 5,
       nome: formData.nome,
@@ -36,14 +29,8 @@ function CardForm() {
       descrizione: formData.descrizione,
       visitato: formData.visitato,
     };
-    setFormData({
-      nome: "",
-      urlImmagine: "",
-      descrizione: "",
-      visitato: false,
-    });
 
-    dispatch(add(city));
+    aggiungiCitta(city);
   };
 
   return (
